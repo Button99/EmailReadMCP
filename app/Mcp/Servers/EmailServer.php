@@ -3,6 +3,7 @@
 namespace App\Mcp\Servers;
 
 use App\Mcp\Tools\CreateEmailTool;
+use App\Mcp\Tools\ReadEmailTool;
 use Laravel\Mcp\Server;
 
 class EmailServer extends Server
@@ -40,6 +41,7 @@ class EmailServer extends Server
      */
     protected array $tools = [
         CreateEmailTool::class,
+        ReadEmailTool::class,
     ];
 
     /**
