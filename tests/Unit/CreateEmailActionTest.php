@@ -1,9 +1,9 @@
 <?php
 
-use App\Actions\CreateReadEmailAction;
+use App\Actions\CreateEmailAction;
 
 test('Creates emails', function () {
-    $action = new CreateReadEmailAction;
+    $action = new CreateEmailAction;
 
     $email = $action->handle('This is a test email.', 'test@test123.com');
 

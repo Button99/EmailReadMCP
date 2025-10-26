@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Actions\CreateEmailAction;
 use Illuminate\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -19,12 +20,17 @@ class CreateEmailTool extends Tool
     /**
      * Handle the tool request.
      */
-    public function handle(Request $request): Response
+    public function handle(Request $request, CreateEmailAction $action): Response
     {
         $request->validate([
             'email_text' => 'required|string|min:1|max:300',
             'email_address' => 'required|string|min:5|max:150',
         ]);
+
+        $email = $action->handle(
+            $request->string('email_text')->value(),
+            $request->string('email_address')->value()
+        );
 
         return Response::text(<<<'MARKDOWN'
             Email created successfully.
