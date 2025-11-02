@@ -48,10 +48,18 @@ class CreateEmailTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
+            'email_subject' => $schema->string()->min(1)
+                ->max(150)
+                ->description(<<<'MARKDOWN'
+                    I want to have the subject of the email created.
+                    The subject should be concise and to the point.
+
+                    Dont use "Assistant" or "Claude", or "GPT", or "AI", or "Bot"
+                    MARKDOWN
+                ),
             'email_text' => $schema->string()->min(1)
                 ->max(300)
                 ->description(<<<'MARKDOWN'
-                    I want to have the subject and the body of the email created.
                     The body will be a small description of the email to be created. This should include the main points to be covered in the email.
 
                     Dont use "Assistant" or "Claude", or "GPT", or "AI", or "Bot"
