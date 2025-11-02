@@ -12,6 +12,7 @@ class Email extends Model
     use HasFactory;
 
     protected $fillable = [
+        'email_subject',
         'email_text',
         'email_address',
     ];

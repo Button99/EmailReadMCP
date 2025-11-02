@@ -23,11 +23,13 @@ class CreateEmailTool extends Tool
     public function handle(Request $request, CreateEmailAction $action): Response
     {
         $request->validate([
+            'email_subject' => 'required|string|min:1|max:150',
             'email_text' => 'required|string|min:1|max:300',
             'email_address' => 'required|string|min:5|max:150',
         ]);
 
-        $email = $action->handle(
+        $action->handle(
+            $request->string('email_subject')->value(),
             $request->string('email_text')->value(),
             $request->string('email_address')->value()
         );
@@ -49,8 +51,9 @@ class CreateEmailTool extends Tool
             'email_text' => $schema->string()->min(1)
                 ->max(300)
                 ->description(<<<'MARKDOWN'
-                    A small description of the email to be created. This should include the main points to be covered in the email.
-                    
+                    I want to have the subject and the body of the email created.
+                    The body will be a small description of the email to be created. This should include the main points to be covered in the email.
+
                     Dont use "Assistant" or "Claude", or "GPT", or "AI", or "Bot"
                     MARKDOWN
                 ),
@@ -58,7 +61,7 @@ class CreateEmailTool extends Tool
                 ->max(150)
                 ->description(<<<'MARKDOWN'
                         The recipient's email address.
-                        
+
                         Dont use "Assistant" or "Claude", or "GPT", or "AI", or "Bot"
                         MARKDOWN
                 ),
