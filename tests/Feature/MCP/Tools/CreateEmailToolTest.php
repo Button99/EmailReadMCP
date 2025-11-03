@@ -23,6 +23,7 @@ test('Validates the email argument', function () {
 
 test('Creates an email', function () {
     $response = EmailServer::tool(CreateEmailTool::class, [
+        'email_subject' => 'Test Subject',
         'email_text' => 'This is a test email.',
         'email_address' => 'test@test.com',
     ]);
