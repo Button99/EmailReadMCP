@@ -14,6 +14,7 @@ class EmailFactory extends Factory
         return [
             'email_text' => $this->faker->paragraph(3),
             'email_address' => $this->faker->unique()->safeEmail(),
+            'email_subject' => $this->faker->sentence(6, true),
         ];
     }
 }
