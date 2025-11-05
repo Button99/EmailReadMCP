@@ -15,5 +15,6 @@ class Email extends Model
         'email_subject',
         'email_text',
         'email_address',
+        'send_email',
     ];
 }

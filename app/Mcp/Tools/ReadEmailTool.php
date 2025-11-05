@@ -16,7 +16,7 @@ class ReadEmailTool extends Tool
      */
     protected string $description = <<<'MARKDOWN'
         Use this tool to read an existing email stored in the database. Provide the email text and the email address of the user, and it was created.
-        
+
         Default number is 5 emails.
     MARKDOWN;
 
@@ -32,7 +32,8 @@ class ReadEmailTool extends Tool
         }
 
         $formattedEmails = $emails->map(fn (Email $email): string => sprintf(
-            'Email text: %s, Email address: %s, Created at: %s',
+            'Email subject: %s Email text: %s, Email address: %s, Created at: %s',
+            $email->email_subject,
             $email->email_text,
             $email->email_address,
             $email->created_at->toDateTimeString()
