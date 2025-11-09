@@ -1,61 +1,186 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Read Emails MCP
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+An AI-powered Model Context Protocol (MCP) server built with Laravel that enables Claude to create, read, and manage emails through a conversational interface.
 
-## About Laravel
+## Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Read Emails MCP is a Laravel-based MCP server that exposes email management capabilities to Claude via two main tools:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Create Email**: Compose new emails with subject, body text, and recipient address
+- **Read Email**: Retrieve and display the latest emails from the database
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The server integrates with Laravel's mail system to queue and send emails via SMTP (Gmail configured by default), with full database persistence and background job processing.
 
-## Learning Laravel
+## Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- 💬 **AI-Powered Composition**: Let Claude help compose emails conversationally
+- 📧 **Email Storage**: Persistent database storage for all emails
+- 📋 **Email Templates**: Uses Laravel's view system for formatted emails
+- 🧪 **Comprehensive Tests**: Full test coverage with Pest framework
+- 🔐 **Validated Input**: Schema validation on all MCP tools
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Getting Started
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Prerequisites
 
-## Laravel Sponsors
+- PHP 8.2+
+- Composer
+- Node.js & npm
+- SQLite or MySQL
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Installation
 
-### Premium Partners
+```bash
+# Clone the repository
+git clone <repository-url>
+cd ReadEmailsMCP
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Install PHP dependencies
+composer install
 
+# Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# Setup database
+php artisan migrate
+
+# Install Node dependencies
+npm install
+
+# Build assets
+npm run build
+```
+
+### Configuration
+
+Configure your mail driver in `.env`:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your-email@gmail.com
+MAIL_FROM_NAME="Your Name"
+```
+
+For Gmail, use an [App Password](https://support.google.com/accounts/answer/185833) instead of your regular password.
+
+## Usage
+
+#### Create Email
+
+Claude can create new emails by invoking the `CreateEmailTool` with:
+
+```json
+{
+  "email_subject": "Hello there",
+  "email_text": "This is the email body content",
+  "email_address": "recipient@example.com"
+}
+```
+
+**Validation Rules:**
+- `email_subject`: 1-150 characters (required)
+- `email_text`: 1-300 characters (required)
+- `email_address`: 5-150 characters (required)
+
+#### Read Email
+
+Claude can retrieve the latest 5 emails using the `ReadEmailTool` (no parameters required):
+
+```json
+{}
+```
+
+Returns formatted list of emails with subject, body, recipient, and creation timestamp.
+
+### CLI Commands
+
+#### Send Emails
+
+Manually trigger email sending from the command line:
+
+```bash
+php artisan app:send-email-command
+```
+
+This command:
+1. Fetches all unsent emails from the database
+2. Queues them for sending
+3. Marks them as sent
+
+#### Development Server
+
+Run the full development environment with server, queue listener, and logs:
+
+```bash
+composer run dev
+```
+
+This starts:
+- Laravel development server (http://localhost:8000)
+- Queue listener for background jobs
+- Pail logs (real-time logs)
+- Vite dev server (asset compilation)
+
+## Testing
+
+The project uses **Pest** for comprehensive testing.
+
+## Technology Stack
+
+- **Framework**: Laravel 12.0
+- **PHP**: 8.2+
+- **MCP Support**: Laravel MCP 0.3.0
+- **Testing**: Pest 4.1
+- **Database**: SQLite / MySQL
+- **Queue**: Database driver
+- **Mail**: SMTP (Gmail)
+- **Frontend**: Vite + Tailwind CSS
+- **Code Quality**: PHPStan, Pint, Rector
+
+### Local Development
+
+1. Start the development server:
+   ```bash
+   composer run dev
+   ```
+
+2. Visit http://localhost:8000
+
+3. Access Claude Code integration through the MCP tools
+
+### Database Migrations
+
+Run migrations:
+
+```bash
+php artisan migrate
+```
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Contributions are welcome! Please ensure:
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. All tests pass (`composer run test`)
+2. Code is properly formatted (`composer run lint`)
+3. Static analysis passes (`composer run analyse`)
+4. Commit messages are clear and descriptive
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT License - see LICENSE file for details
+
+## Support
+
+For issues, feature requests, or questions:
+
+1. Check existing GitHub issues
+2. Create a new issue with detailed information
+3. Include error logs and test output
+4. Describe the expected vs actual behavior
+
+---
