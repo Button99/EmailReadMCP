@@ -13,7 +13,7 @@ final readonly class SendEmailAction
         $emails = Email::where('send_email', false)->get();
         foreach ($emails as $email) {
             $mail = new SendEmail($email->email_subject, $email->email_text);
-            Mail::to($email->email_address)->queue($mail);
+            Mail::to($email->email_address)->send($mail);
             $email->send_email = true;
             $email->save();
         }
